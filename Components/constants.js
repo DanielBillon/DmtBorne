@@ -1,5 +1,35 @@
 import { Dimensions } from "react-native";
-const { width, height } = Dimensions.get("window");
+import SQLite, { openDatabase } from 'react-native-sqlite-storage';
+import axios from 'axios';
+const { width, height } = Dimensions.get("screen");
+let db = SQLite.openDatabase("gfa.db", "1.0", "OXYGENECI", -1);
+
+const current = new Date();
+const dd = String(current.getDate()).padStart(2, '0');
+const mm = String(current.getMonth() + 1).padStart(2, '0'); //January is 0!
+const yyyy = current.getFullYear();
+
+const hh = String(current.getHours());
+const minute = String(current.getMinutes());
+const seconds = String(current.getSeconds());
+
+export const IP ="http://192.168.8.120" ;
+export const IP_SERVER =IP+"/dmt" ;
+
+export const calcule_age=(date_conv)=> {
+
+    var now = new Date(date_conv);
+    var age = yyyy - now.getFullYear();
+    var mon_age = age;
+    /* if (age <= 1) {
+        var mon_age = age + " an"
+    } else {
+        var mon_age = age + " ans"
+    } */
+
+
+    return mon_age;
+}
 
 export const SETTING_SERVER = {
     dossier: "dmt", 

@@ -1,20 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { StatusBar, FlatList,SafeAreaView, Modal, Pressable, View, ImageBackground, Text, TouchableOpacity, Image, StyleSheet, Dimensions } from 'react-native';
+import { View, ImageBackground, Text, TouchableOpacity, Image } from 'react-native';
 import Paginate from './Paginate';
 import TypePatient from './TypePatient';
-import { USBPrinter } from "react-native-thermal-receipt-printer-image-qr";
 import SQLite, { openDatabase } from 'react-native-sqlite-storage';
 import styles from './Style';
-import {SETTING_SERVER} from './constants';
 import Tts from 'react-native-tts';
 
-
-
-const bg = require('./Img/background_green.png');
-
-
-const DEVICE_WIDTH = Dimensions.get('window').width;
-const DEVICE_HEIGHT = Dimensions.get('window').height;
+const bg = require('./Img/background_white.png');
 
 let db = SQLite.openDatabase("gfa.db", "1.0", "OXYGENECI", -1);
 
@@ -43,6 +35,7 @@ const Beneficiaire = ({route, navigation }) => {
 
   const voix = () => {
     Tts.stop();
+    Tts.setDucking(true);
     const TEXTE_1_2 = "Veuillez selectionner un bénéficiaire";
     Tts.speak(TEXTE_1_2, {
       androidParams: {
@@ -123,26 +116,54 @@ const Retour=()=>{
 
 
   return (
-    <ImageBackground source={bg} resizeMode="cover" style={styles.bg_image}>
-      <SafeAreaView style={styles.contain_beneficiaire}>
+    <ImageBackground source={bg} style={styles.bg_image}>
+      <View style={styles.contain}>
         <View style={styles.divSelect}>
           {choixEntreprise.map((item,i) => (
-            <TouchableOpacity style={styles.ViewSelect} onPress={()=>Retour()}>
-               <Image source={{uri:"file:///storage/emulated/0/Pictures/"+item.logo_entreprise+""}}   style={styles.image_select} />
+            <TouchableOpacity key={i} style={styles.ViewSelect} onPress={()=>Retour()}>
+              <View style={{flexDirection:'row',alignItems:'center'}}>
+                <Image source={{uri:"file:///storage/emulated/0/Pictures/"+item.logo_entreprise+""}}   style={styles.image_select} />
+                {item.nom_entreprise
+                  ?
+                  <>
+                  {item.nom_entreprise.length<=9
+                  ?
+                  <Text style={styles.TextSelect}>{item.nom_entreprise}</Text>
+                  :
+                  <Text style={styles.TextSelect}>{item.nom_entreprise. substring(0, 6) + '...'}</Text>
+                  }
+                  </>
+                  :
+                  true
+                }
+                
+              </View> 
               <View>
-                <Text style={styles.TextSelect}>X</Text>
+                <Image source={require('./Img/del.png')} style={styles.image_delete}/>
               </View>
             </TouchableOpacity>  
               
           ))}
-        </View>  
+        </View>
         
-        <View >
+        <View>
           <TypePatient posts={currentPosts} next_step={next_step}/>
-          <Paginate postsPerPage={postsPerPage} totalPosts={listeBeneficiaire.length} paginate={paginate} previousPage={previousPage}
-                  nextPage={nextPage} currentPage={currentPage}/>
-        </View>          
-      </SafeAreaView>
+        </View>
+        <View>
+          <Paginate 
+            postsPerPage={postsPerPage} 
+            totalPosts={listeBeneficiaire.length} 
+            paginate={paginate} 
+            previousPage={previousPage}
+            nextPage={nextPage} 
+            currentPage={currentPage}
+          /> 
+          
+        </View>
+        
+        
+        
+      </View>
     </ImageBackground>
   );
 };

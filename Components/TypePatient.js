@@ -1,35 +1,44 @@
-import React, { useState, useEffect } from 'react';
-import { StatusBar, FlatList,SafeAreaView, Modal, Pressable, View, ImageBackground, Text, TouchableOpacity, Image, StyleSheet, Dimensions } from 'react-native';import styles from './Style';
+import React from 'react';
+import {  FlatList,View, Text, TouchableOpacity, Image } from 'react-native';import styles from './Style';
 
 const bg_cie = require('./Img/cie.png');
 
 
 const TypePatient = ({ posts,next_step }) => {
     
-    const Item = ({title,id,logo,statut_logo,beneficiare_total}) => {
-        if(beneficiare_total<=3){
-            return(
-                <TouchableOpacity style={styles.container_hight} onPress={() => next_step(id)}>
-                    <Image source={{uri:"file:///storage/emulated/0/Pictures/"+logo+""}}   resizeMode='contain' style={styles.image_hight} />
-                    <View style={styles.name_price_container}>
-                        <Text numberOfLines={2}  style={styles.name_entreprise}>{title}</Text>
-                    </View>
-                </TouchableOpacity>
-            )
-
-        }
-        else{
-            return(
-                <TouchableOpacity style={styles.container} onPress={() => next_step(id)}>
-                    <Image source={{uri:"file:///storage/emulated/0/Pictures/"+logo+""}}   resizeMode='contain' style={styles.image} />
-                    <View style={styles.name_price_container}>
-                        <Text numberOfLines={2}  style={styles.name_entreprise}>{title}</Text>
-                    </View>
-                </TouchableOpacity>
-            )
-
-        }   
-    };
+    const Item = ({title,id,logo,statut_logo,beneficiare_total}) => (
+        <TouchableOpacity style={styles.container_entreprise} onPress={() => next_step(id)}>
+            <Image source={{uri:"file:///storage/emulated/0/Pictures/"+logo+""}}   resizeMode='contain' style={styles.image_logo} />
+            <View style={styles.col_view}>
+                { title 
+                ? 
+                    <>
+                    {title.length <= 14 && (
+                    <Text style={styles.text_view}>{title}</Text>
+                    )}
+                    {title.length > 14 && title.length <= 18 &&(
+                    <Text style={styles.text_small}>{title}</Text>
+                    )}
+                    {title.length > 18 && title.length <= 46  &&(
+                    <Text style={styles.text_22}>{title}</Text>
+                    )}
+                    {title.length > 46  && title.length <= 59  &&(
+                    <Text style={styles.text_17}>{title}</Text>
+                    )}
+                    {title.length > 59  &&(
+                    <Text style={styles.text_17}>{title. substring(0, 60) + '...'}</Text>
+                    )}
+                    </>
+                :
+                    <>
+                    </>
+                }
+                {/* {title. substring(0, 18) + '...'} */}
+            </View>
+        </TouchableOpacity>
+    );
+    
+    
     
 
   
@@ -42,10 +51,10 @@ const TypePatient = ({ posts,next_step }) => {
             renderItem={({item}) => <Item title={item.lib_type_patient} id={item.id_type_patient} logo={item.icon_type_patient} statut_logo={item.statut_img}  beneficiare_total={posts.length}/>}
             keyExtractor={item => item.id_type_patient}
             contentContainerStyle={{
-            paddingLeft: 8,
+           /*  paddingLeft: 8,
             paddingRight: 8,
             paddingBottom: 18,
-            paddingTop: 16,
+            paddingTop: 16, */
             alignItems:'center',
 
 

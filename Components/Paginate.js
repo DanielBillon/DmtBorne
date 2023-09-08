@@ -14,45 +14,53 @@ const Paginate = ({ postsPerPage, totalPosts, paginate, previousPage, nextPage,c
   
   return (
     <View style={{ flexDirection: 'row',justifyContent:'center' }}>
-        {currentPage==1 
-            ? 
+        {totalPosts>6 &&
+        
+            (
             <>
-            </> 
-            :
-            <>
+                {currentPage==1 
+                ? 
+                <>
+                </> 
+                :
+                
                 <TouchableOpacity style={styles.ViewNum} onPress={() => previousPage()}>
                     <View >
                         <Text style={styles.TextNum}>Retour</Text>
                     </View>
                 </TouchableOpacity> 
-            </>
-        }
-           
-        {pageNumbers.map((number) => (
-            <View  
-                key={number} 
-                style={currentPage==number ? styles.ViewNum_select: styles.ViewNum} 
-                onTouchStart={() => paginate(number)}
-            >
-                <Text 
-                    style={currentPage==number ? styles.TextNum_select: styles.TextNum} 
-                >{number}</Text>
-            </View>
+                
+                }
             
-        ))}
-        {currentPage==Math.ceil(totalPosts / postsPerPage) 
-            ? 
-            <>
-            </> 
-            :
-            <>
-                <TouchableOpacity style={styles.ViewNum} onPress={() => nextPage()}>
-                    <View >
-                        <Text style={styles.TextNum}>Suivant</Text>
+                {pageNumbers.map((number) => (
+                    <View  
+                        key={number} 
+                        style={currentPage==number ? styles.ViewNum_select: styles.ViewNum} 
+                        onTouchStart={() => paginate(number)}
+                    >
+                        <Text 
+                            style={currentPage==number ? styles.TextNum_select: styles.TextNum} 
+                        >{number} </Text>
                     </View>
-                </TouchableOpacity>
+                    
+                ))}
+                {currentPage==Math.ceil(totalPosts / postsPerPage) 
+                    ? 
+                    <>
+                    </> 
+                    :
+                
+                    <TouchableOpacity style={styles.ViewNum} onPress={() => nextPage()}>
+                        <View >
+                            <Text style={styles.TextNum}>Suivant</Text>
+                        </View>
+                    </TouchableOpacity>
+                    
+                }
             </>
-        }
+            )
+        
+        }    
 
         
         
