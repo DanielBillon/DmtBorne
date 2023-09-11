@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { StatusBar, FlatList,SafeAreaView, Modal, Pressable, View, ImageBackground, Text, TouchableOpacity, Image, StyleSheet, Dimensions } from 'react-native';import styles from './Style';
+import {IMG_SERVER} from './constants';
 
 
 const Entreprise = ({ posts,next_step }) => {
@@ -7,7 +8,8 @@ const Entreprise = ({ posts,next_step }) => {
         //const Sizetitle=title.length;
         
         return <TouchableOpacity style={styles.container_entreprise} onPress={() => next_step(id)}>
-            <Image source={{uri:"file:///storage/emulated/0/Pictures/"+logo+""}}   resizeMode='contain' style={styles.image_entreprise} />
+            <Image source={{uri:IMG_SERVER+"/logo/"+logo+""}}   resizeMode='contain' style={styles.image_entreprise} />
+            {/* <Image source={{uri:"file:///storage/emulated/0/Pictures/"+logo+""}}   resizeMode='contain' style={styles.image_entreprise} /> */}
         </TouchableOpacity>
     };
     

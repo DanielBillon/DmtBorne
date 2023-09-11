@@ -5,6 +5,7 @@ import TypePatient from './TypePatient';
 import SQLite, { openDatabase } from 'react-native-sqlite-storage';
 import styles from './Style';
 import Tts from 'react-native-tts';
+import {IMG_SERVER} from './constants';
 
 const bg = require('./Img/background_white.png');
 
@@ -122,7 +123,7 @@ const Retour=()=>{
           {choixEntreprise.map((item,i) => (
             <TouchableOpacity key={i} style={styles.ViewSelect} onPress={()=>Retour()}>
               <View style={{flexDirection:'row',alignItems:'center'}}>
-                <Image source={{uri:"file:///storage/emulated/0/Pictures/"+item.logo_entreprise+""}}   style={styles.image_select} />
+                <Image source={{uri:IMG_SERVER+"/logo/"+item.logo_entreprise+""}}   style={styles.image_select} />
                 {item.nom_entreprise
                   ?
                   <>

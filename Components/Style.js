@@ -68,6 +68,11 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 42,
   },
+  InputAnnee: {
+    color: "#888888",
+    fontWeight: 'bold',
+    fontSize: 85,
+  },
   ViewNumProtocol_on: {
     width: '50%',
     alignItems: 'center',
@@ -111,7 +116,7 @@ const styles = StyleSheet.create({
   TextNumValide: {
     fontSize: 64,
     padding: 15,
-    color: 'black'
+    color: '#FFF'
   },
 
   ViewAnnee: {
@@ -119,11 +124,11 @@ const styles = StyleSheet.create({
     alignItems:'center',
     width: '100%',
     justifyContent: 'center',
-    backgroundColor: '#fff',
+    backgroundColor: '#FFF',
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 2,
-    borderColor: '#ddd',
+    borderColor: '#FFF',
     borderBottomWidth: 2,
     marginBottom:20
   },
@@ -139,6 +144,17 @@ const styles = StyleSheet.create({
     borderBottomWidth: 2,
   },
   ViewNumValide: {
+    width: '33.3%',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#009900',
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 2,
+    borderColor: '#ddd',
+    borderBottomWidth: 2,
+  },
+  ViewNumValide_off: {
     width: '33.3%',
     alignItems: 'center',
     justifyContent: 'center',
@@ -292,7 +308,8 @@ const styles = StyleSheet.create({
     /* width: (SIZES.width * 0.5 - 24), */
     alignItems: 'center',
     justifyContent:'center',
-    height: 320,
+    //height: 320,
+    height: 310,
     backgroundColor: '#ff9900',
     padding: 10,
     borderRadius: 20,
@@ -333,7 +350,7 @@ const styles = StyleSheet.create({
     borderRadius: 20
   },
   image_logo: {
-    height: 250,
+    height: 240,
     width: '100%',
     backgroundColor: "#FFF",
     borderRadius: 20
@@ -348,7 +365,7 @@ const styles = StyleSheet.create({
   },
   ViewSelect: {
     width: '24.5%',
-    height:50,
+    height:80,
     alignItems: 'center',
     backgroundColor: '#FFF',
     shadowOpacity: 0.25,
@@ -358,7 +375,8 @@ const styles = StyleSheet.create({
     borderColor: '#FFF',
     margin:3,
     flexDirection:'row',
-    justifyContent:'space-around'
+    justifyContent:'flex-start',
+    padding:4,
     
 },
 TextSelect: {
@@ -369,12 +387,12 @@ TextSelect: {
   fontWeight:'bold'
 }, 
 image_delete: {
-  width: 30,
-  height: 30,
+  width: 25,
+  height: 25,
 },
 image_select: {
-  width: 100,
-  height: 47,
+  width: 128,
+  height: 75,
   resizeMode:'contain',
   borderColor: 'black',
   borderWidth:1,

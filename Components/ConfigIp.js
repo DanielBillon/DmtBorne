@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import SQLite, { openDatabase } from 'react-native-sqlite-storage';
-import RNFetchBlob from 'rn-fetch-blob';
+//import RNFetchBlob from 'rn-fetch-blob';
 import {IP_SERVER} from './constants';
 import axios from 'axios';
 
-import { View, Text, Image, ActivityIndicator,Button } from 'react-native';
+import { View, Text, Image, Button } from 'react-native';
 import styles from './Style';
 
 let db = SQLite.openDatabase("gfa.db", "1.0", "OXYGENECI", -1);
@@ -16,11 +16,11 @@ const ConfigIp = ({ navigation }) => {
   const [connexion, setconnexion] = useState('oui');
   const [tentative, settentative] = useState(1);
   const [message, setmessage] = useState('Tentative de connexion au serveur en cours ...');
-  const [TotalImgDownload, setTotalImgDownload] = useState(0);
+  //const [TotalImgDownload, setTotalImgDownload] = useState(0);
   const [downloadData, setDownloadData] = useState(false);
   const [IdInfirmerie, setIdInfirmerie] = useState('');
   const [Infirmerie, setInfirmerie] = useState('');
-  const [checkDownloadImgEntreprise, setcheckDownloadImgEntreprise] = useState(false);
+  /* const [checkDownloadImgEntreprise, setcheckDownloadImgEntreprise] = useState(false);
   const [checkDownloadImgpatient, setcheckDownloadImgpatient] = useState(false);
   const [checkDownloadImgprestation, setcheckDownloadImgprestation] = useState(false);
 
@@ -29,7 +29,12 @@ const ConfigIp = ({ navigation }) => {
   const [PicturePatient, SetPicturePatient] = useState('');
   const [IdpicturePatient, SetIdpicturePatient] = useState('');
   const [PicturePrestation, SetPicturePrestation] = useState('');
-  const [IdpicturePrestation, SetIdpicturePrestation] = useState('');
+  const [IdpicturePrestation, SetIdpicturePrestation] = useState(''); */
+
+  const [tt_entreprise, SetTt_entreprise] = useState('');
+  const [tt_prestation, SetTt_prestation] = useState('');
+  const [tt_type_patient, SetTt_type_patient] = useState('');
+
 
   useEffect(()=>{
     
@@ -48,11 +53,11 @@ const ConfigIp = ({ navigation }) => {
     console.log("Screen :"+ Screen +" / downloadData : "+downloadData );
     if(Screen=='config'){
       if(downloadData==true){
-        console.log('DEBUT TELECHARGEMENT DATA');
+        //console.log('DEBUT TELECHARGEMENT DATA');
         const timer_misej = setInterval(() => {
           synchro_bd();
   
-          if(checkDownloadImgEntreprise==false){
+          /* if(checkDownloadImgEntreprise==false){
             checkDownloadImgEntreprise_process();
           }
           if(checkDownloadImgpatient==false){
@@ -60,7 +65,7 @@ const ConfigIp = ({ navigation }) => {
           }
           if(checkDownloadImgprestation==false){
             checkDownloadImgprestation_process();
-          }
+          } */
   
         }, 5000);
         return () => {
@@ -85,7 +90,7 @@ const ConfigIp = ({ navigation }) => {
     
   }, [Screen,downloadData])
 
-  useEffect(() => {
+  /* useEffect(() => {
     if(checkDownloadImgEntreprise==true){
       CheckFileExist("entreprises");
     }
@@ -186,7 +191,7 @@ const ConfigIp = ({ navigation }) => {
     // To get the file extension
     return /[.]/.exec(filename) ?
              /[^.]+$/.exec(filename) : undefined;
-  };
+  }; */
 
   const Send_connexion = () => {
     let url= IP_SERVER+"/check_appel.php?connexion";
@@ -231,7 +236,7 @@ const ConfigIp = ({ navigation }) => {
   const synchro_bd=()=>{
     console.log('synchronisation');
     db.transaction(function(tx){
-      tx.executeSql("SELECT *,(SELECT COUNT(id_entreprise) FROM entreprises WHERE logo_entreprise!='non defini' and deleted='faux' and statut_img='0')AS tt_logo_entreprise, (SELECT COUNT(id_prestation) FROM prestations WHERE icon_prestation!='non defini' and deleted='faux' and statut_img='0')AS tt_icon_prestation,(SELECT COUNT(id_type_patient) FROM type_patient WHERE icon_type_patient!='non defini' and deleted='faux' and statut_img='0')AS tt_icon_type_patient FROM entreprises limit 1", [], function(tx, results){
+      /* tx.executeSql("SELECT *,(SELECT COUNT(id_entreprise) FROM entreprises WHERE logo_entreprise!='non defini' and deleted='faux' and statut_img='0')AS tt_logo_entreprise, (SELECT COUNT(id_prestation) FROM prestations WHERE icon_prestation!='non defini' and deleted='faux' and statut_img='0')AS tt_icon_prestation,(SELECT COUNT(id_type_patient) FROM type_patient WHERE icon_type_patient!='non defini' and deleted='faux' and statut_img='0')AS tt_icon_type_patient FROM entreprises limit 1", [], function(tx, results){
           
         var work = results.rows.item(0);  
         var tt_logo_entreprise=work.tt_logo_entreprise;
@@ -249,7 +254,13 @@ const ConfigIp = ({ navigation }) => {
           SetScreen('accueil');
         }
                      
-      });
+      }); */
+
+      if(tt_entreprise==0 && tt_prestation==0 && tt_type_patient==0){
+        console.log("FIN DE LA MISE A JOUR");
+        //SetScreen('config');
+        SetScreen('accueil');
+      }
 
       ////SYNCHRO ENTREPRISES
       tx.executeSql('SELECT MAX(last_modified)AS last_modified FROM entreprises  limit 1', [], function(tx, results){
@@ -261,6 +272,8 @@ const ConfigIp = ({ navigation }) => {
         axios.get(url)
         .then(res => {
           const data = res.data;
+          //console.log("ENTREPRISE DATA : " +data.length);
+          SetTt_entreprise(data.length)
           return data.map(function(donnees) {
             let id_entreprise=donnees.id_entreprise;
             let nom_entreprise=donnees.nom_entreprise;
@@ -276,7 +289,7 @@ const ConfigIp = ({ navigation }) => {
         })        
               
       });
-
+      
       ////SYNCHRO TYPE PATIENT
       tx.executeSql('SELECT MAX(last_modified)AS last_modified FROM type_patient  limit 1', [], function(tx, results){
         var work = results.rows.item(0);  
@@ -287,7 +300,7 @@ const ConfigIp = ({ navigation }) => {
         axios.get(url)
         .then(res => {
           const data = res.data;
-          
+          SetTt_type_patient(data.length)
           return data.map(function(donnees) {
             //console.log(donnees);
             let id_type_patient=donnees.id_type_patient;
@@ -315,7 +328,7 @@ const ConfigIp = ({ navigation }) => {
         axios.get(url)
         .then(res => {
           const data = res.data;
-          
+          SetTt_prestation(data.length)
           return data.map(function(donnees) {
             //console.log(donnees);
             let id_prestation=donnees.id_prestation;
@@ -339,7 +352,7 @@ const ConfigIp = ({ navigation }) => {
 
   }
 
-  const checkDownloadImgEntreprise_process=()=>{
+  /* const checkDownloadImgEntreprise_process=()=>{
     db.transaction(function(tx){
       tx.executeSql("SELECT * FROM entreprises WHERE logo_entreprise!='non defini' and deleted='faux' and statut_img='0' limit 1 ", [], function(tx, results){
           
@@ -517,7 +530,7 @@ const ConfigIp = ({ navigation }) => {
 
 
     
-  }
+  } */
 
   const Reessayer=()=>{
     setconnexion('oui');
@@ -527,7 +540,7 @@ const ConfigIp = ({ navigation }) => {
   
 
   
-  const Element_modal = () => {
+  /* const Element_modal = () => {
     if (le_modal == 'synchro') {
       return (
         <View style={styles.centeredView_setting}>
@@ -552,7 +565,7 @@ const ConfigIp = ({ navigation }) => {
       )
     }
     
-  }
+  } */
   
   return (
     <View style={styles.centeredView}>
@@ -580,7 +593,7 @@ const ConfigIp = ({ navigation }) => {
       :
       <>
           <Text style={styles.modalText}>Préparation de la borne </Text>
-          <Text style={styles.Textconf}>Nombre d'image à télécharger : {TotalImgDownload} </Text>
+          {/* <Text style={styles.Textconf}>Nombre d'image à télécharger : {TotalImgDownload} </Text> */}
           <Text >Cela peut prendre quelques minutes </Text>
           <Image source={load} style={styles.img_operation}  /> 
       </>

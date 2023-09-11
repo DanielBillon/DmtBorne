@@ -13,8 +13,9 @@ const hh = String(current.getHours());
 const minute = String(current.getMinutes());
 const seconds = String(current.getSeconds());
 
-export const IP ="http://192.168.8.120" ;
+export const IP ="http://192.168.0.20" ;
 export const IP_SERVER =IP+"/dmt" ;
+export const IMG_SERVER =IP+"/dmt/img_locale/" ;
 
 export const calcule_age=(date_conv)=> {
 

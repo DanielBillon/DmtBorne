@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { StatusBar, FlatList,SafeAreaView, Modal, Pressable, View, ImageBackground, Text, TouchableOpacity, Image, StyleSheet, Dimensions } from 'react-native';import styles from './Style';
+import {IMG_SERVER} from './constants';
 
 //const PrestationData = ({ posts,imprimer }) => {
 const PrestationData = ({ posts,next_step }) => {
 
     const Item = ({title,id,logo,statut_logo,prefixe_prestation}) => (
         <TouchableOpacity style={styles.container_entreprise} onPress={() => next_step(prefixe_prestation,title,id)}>
-            <Image source={{uri:"file:///storage/emulated/0/Pictures/"+logo+""}}   resizeMode='contain' style={styles.image_logo} />
+            <Image source={{uri:IMG_SERVER+"icon_prestation/"+logo+""}}   resizeMode='contain' style={styles.image_logo} />
             <View style={styles.col_view}>
                 { title 
                 ? 

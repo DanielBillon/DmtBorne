@@ -4,7 +4,7 @@ import { USBPrinter } from "react-native-thermal-receipt-printer-image-qr";
 import SQLite, { openDatabase } from 'react-native-sqlite-storage';
 import styles from './Style';
 import Tts from 'react-native-tts';
-import {IP_SERVER,calcule_age} from './constants';
+import {IP_SERVER,calcule_age,IMG_SERVER} from './constants';
 import axios from 'axios';
 
 
@@ -23,8 +23,8 @@ const Annee_naissance = ({route, navigation }) => {
   const [choixPrestation, setChoixPrestation] = useState(['']);
   const [annee, setAnnee] = useState('');
   const images = {
-    masculin: require("./Img/masculin.png"),
-    feminin: require("./Img/feminin.png"),
+    homme: require("./Img/masculin.png"),
+    femme: require("./Img/feminin.png"),
   };
   
  
@@ -163,7 +163,7 @@ const Annee_naissance = ({route, navigation }) => {
     axios.get(url)
     .then(res => {
       const data = res.data[0].en_attente;
-      //console.log('eeee' +data);
+      console.log('eeee' +data);
       start_impression(data,prefixe, name_ope, id_op);
     })
     .catch(err=>{
@@ -317,13 +317,11 @@ const Annee_naissance = ({route, navigation }) => {
 
 
   return (
-    <ImageBackground source={bg} style={styles.bg_image}>
       <View  style={styles.contain_annee}>
         <View style={styles.divSelect}>
         {choixEntreprise.map((item,i) => (
-            <View key={i} style={styles.ViewSelect}>
-            <View style={{flexDirection:'row',alignItems:'center'}}>
-                <Image source={{uri:"file:///storage/emulated/0/Pictures/"+item.logo_entreprise+""}}   style={styles.image_select} />
+            <View key={i} style={[styles.ViewSelect,{flexDirection:'row',alignItems:'center'}]}>
+                <Image source={{uri:IMG_SERVER+"logo/"+item.logo_entreprise+""}}   style={styles.image_select} />
                 {item.nom_entreprise
                   ?
                   <>
@@ -338,14 +336,12 @@ const Annee_naissance = ({route, navigation }) => {
                   true
                 }
             </View> 
-            </View>  
               
           ))}
 
           {choixBeneficiare.map((item,i) => (
-            <TouchableOpacity key={i} style={styles.ViewSelect}>
-            <View style={{flexDirection:'row',alignItems:'center'}}>
-            <Image source={{uri:"file:///storage/emulated/0/Pictures/"+item.icon_type_patient+""}}   style={styles.image_select} />
+            <View key={i} style={[styles.ViewSelect,{flexDirection:'row',alignItems:'center'}]}>
+            <Image source={{uri:IMG_SERVER+"beneficiaire/"+item.icon_type_patient+""}}   style={styles.image_select} />
             {item.lib_type_patient
               ?
               <>
@@ -360,14 +356,12 @@ const Annee_naissance = ({route, navigation }) => {
               true
             }
             </View> 
-            </TouchableOpacity>  
               
           ))}
 
           {choixPrestation.map((item,i) => (
-            <TouchableOpacity key={i} style={styles.ViewSelect} onPress={()=>Retour()}>
-            <View style={{flexDirection:'row',alignItems:'center'}}>
-            <Image source={{uri:"file:///storage/emulated/0/Pictures/"+item.icon_prestation+""}}   style={styles.image_select} />
+            <View key={i} style={[styles.ViewSelect,{flexDirection:'row',alignItems:'center'}]}>
+            <Image source={{uri:IMG_SERVER+"icon_prestation/"+item.icon_prestation+""}}   style={styles.image_select} />
             {item.lib_prestation
               ?
               <>
@@ -381,11 +375,7 @@ const Annee_naissance = ({route, navigation }) => {
               :
               true
             }
-            </View> 
-            <View>
-                <Image source={require('./Img/del.png')} style={styles.image_delete}/>
             </View>
-            </TouchableOpacity>  
               
           ))}
 
@@ -418,23 +408,23 @@ const Annee_naissance = ({route, navigation }) => {
                         
             <View style={styles.ViewAnnee}>
 
-              <View style={{ width: '90%',alignItems:'center' }}>
+              <View style={{ width: '100%',alignItems:'center' }}>
                 {annee.length>'0'
                   ?
-                    <TextInput style={styles.Input_1} editable={false} value={annee} />
+                    <TextInput style={styles.InputAnnee} editable={false} value={annee} />
                   : 
-                    <TextInput style={styles.Input_1} editable={false} placeholder="Année de naissance" /> 
+                    <TextInput style={styles.InputAnnee} editable={false} placeholder="Année de naissance" /> 
                 }
                 
               </View>
-              <View style={{ width: '5%' }}>
+              {/* <View style={{ width: '5%' }}>
                 {annee.length>'0'&&
                   <TouchableOpacity onPress={() => setAnnee(annee.substr(0, annee.length - 1))}>
                     <Image source={require('./Img/supp.png')}  />
                   </TouchableOpacity>
                 }
                 
-              </View>
+              </View> */}
             </View>
 
             <View style={{ width: '100%' }}>
@@ -476,6 +466,9 @@ const Annee_naissance = ({route, navigation }) => {
 
               <View style={{ flexDirection: 'row' }}>
                 <View style={styles.ViewNum} >
+                  <TouchableOpacity onPress={() => setAnnee(annee.substr(0, annee.length - 1))}>
+                      <Image source={require('./Img/supp_orange.png')}  />
+                    </TouchableOpacity>
                 </View>
                 <View style={styles.ViewNum} onTouchStart={() => add_annee("0")}>
                   <Text style={styles.TextNum}>0</Text>
@@ -487,7 +480,7 @@ const Annee_naissance = ({route, navigation }) => {
                         <Text style={styles.TextNumValide}>Valider</Text>
                       </View>
                     :
-                      <View style={styles.ViewNumValide} >
+                      <View style={styles.ViewNumValide_off} >
                       </View>
 
                   }
@@ -500,7 +493,6 @@ const Annee_naissance = ({route, navigation }) => {
         </View>
           
       </View>
-    </ImageBackground>
   );
 };
 

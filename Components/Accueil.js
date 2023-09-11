@@ -212,7 +212,7 @@ const Accueil = ({route, navigation }) => {
           var sexe = work.sexe;
           var annee_naissance = work.annee_naissance;
 
-          var url=IP_SERVER+"/check_appel.php?id_ticket="+id_ticket+"&date_ticket="+date_ticket+"&heure_ticket="+heure_ticket+"&id_infirmerie="+id_infirmerie+"&id_entreprise="+id_entreprise+"&pref="+pref+"&seq="+seq+"&last_modified="+last_modified+"&id_type_usage="+id_type_usage+"&id_operation="+id_operation+"&sexe="+sexe+"&annee_naissance="+annee_naissance+"&send_ticket";
+          var url=IP_SERVER+"/check_appel.php?id_ticket="+id_ticket+"&date_ticket="+date_ticket+"&heure_ticket="+heure_ticket+"&id_entreprise="+id_entreprise+"&pref="+pref+"&seq="+seq+"&last_modified="+last_modified+"&id_type_usage="+id_type_usage+"&id_operation="+id_operation+"&sexe="+sexe+"&annee_naissance="+annee_naissance+"&send_ticket";
 
           console.log(url);
           axios.get(url)

@@ -3,7 +3,7 @@ import { View, ImageBackground, Text, TouchableOpacity, Image,FlatList } from 'r
 import SQLite, { openDatabase } from 'react-native-sqlite-storage';
 import styles from './Style';
 import Tts from 'react-native-tts';
-import {IP_SERVER} from './constants';
+import {IP_SERVER,IMG_SERVER} from './constants';
 import axios from 'axios';
 
 
@@ -21,12 +21,12 @@ const Sexe = ({route, navigation }) => {
   const [choixBeneficiare, setChoixBeneficiare] = useState(['']);
   const [choixPrestation, setChoixPrestation] = useState(['']);
   const images = {
-    masculin: require("./Img/masculin.png"),
-    feminin: require("./Img/feminin.png"),
+    homme: require("./Img/masculin.png"),
+    femme: require("./Img/feminin.png"),
   };
   const ListeSexe = [ 
-                { "id_sexe": 1,"lib_sexe": "masculin","sexe": "M"}, 
-                { "id_sexe": 2,"lib_sexe": "feminin","sexe": "F" }]
+                { "id_sexe": 1,"lib_sexe": "homme","sexe": "M"}, 
+                { "id_sexe": 2,"lib_sexe": "femme","sexe": "F" }]
 
   useEffect(() => {
     voix();
@@ -150,9 +150,8 @@ const Sexe = ({route, navigation }) => {
         <View  style={styles.contain}>
             <View style={styles.divSelect}>
                 {choixEntreprise.map((item,i) => (
-                    <View key={i} style={styles.ViewSelect}>
-                    <View style={{flexDirection:'row',alignItems:'center'}}>
-                        <Image source={{uri:"file:///storage/emulated/0/Pictures/"+item.logo_entreprise+""}}   style={styles.image_select} />
+                    <View key={i} style={[styles.ViewSelect,{flexDirection:'row',alignItems:'center'}]}>
+                        <Image source={{uri:IMG_SERVER+"logo/"+item.logo_entreprise+""}}   style={styles.image_select} />
                         {item.nom_entreprise
                           ?
                           <>
@@ -167,14 +166,12 @@ const Sexe = ({route, navigation }) => {
                           true
                         }
                     </View> 
-                    </View>  
                     
                 ))}
 
                 {choixBeneficiare.map((item,i) => (
-                    <TouchableOpacity key={i} style={styles.ViewSelect}>
-                    <View style={{flexDirection:'row',alignItems:'center'}}>
-                    <Image source={{uri:"file:///storage/emulated/0/Pictures/"+item.icon_type_patient+""}}   style={styles.image_select} />
+                    <View key={i}  style={[styles.ViewSelect,{flexDirection:'row',alignItems:'center'}]}>
+                    <Image source={{uri:IMG_SERVER+"beneficiaire/"+item.icon_type_patient+""}}   style={styles.image_select} />
                     {item.lib_type_patient
                       ?
                       <>
@@ -189,22 +186,21 @@ const Sexe = ({route, navigation }) => {
                       true
                     }
                     </View> 
-                    </TouchableOpacity>  
                     
                 ))}
 
                 {choixPrestation.map((item,i) => (
                     <TouchableOpacity key={i} style={styles.ViewSelect} onPress={()=>Retour()}>
                     <View style={{flexDirection:'row',alignItems:'center'}}>
-                    <Image source={{uri:"file:///storage/emulated/0/Pictures/"+item.icon_prestation+""}}   style={styles.image_select} />
+                    <Image source={{uri:IMG_SERVER+"icon_prestation/"+item.icon_prestation+""}}   style={styles.image_select} />
                     {item.lib_prestation
                       ?
                       <>
-                      {item.lib_prestation.length<=9
+                      {item.lib_prestation.length<=8
                       ?
                       <Text style={styles.TextSelect}>{item.lib_prestation}</Text>
                       :
-                      <Text style={styles.TextSelect}>{item.lib_prestation. substring(0, 6) + '...'}</Text>
+                      <Text style={styles.TextSelect}>{item.lib_prestation. substring(0, 5) + '...'}</Text>
                       }
                       </>
                       :

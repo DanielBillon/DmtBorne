@@ -6,7 +6,7 @@ import { USBPrinter } from "react-native-thermal-receipt-printer-image-qr";
 import SQLite, { openDatabase } from 'react-native-sqlite-storage';
 import styles from './Style';
 import Tts from 'react-native-tts';
-import {IP_SERVER} from './constants';
+import {IP_SERVER,IMG_SERVER} from './constants';
 import axios from 'axios';
 
 
@@ -345,9 +345,8 @@ const Prestation = ({route, navigation }) => {
       <View style={styles.contain}>
         <View style={styles.divSelect}>
           {choixEntreprise.map((item,i) => (
-            <View key={i} style={styles.ViewSelect}>
-              <View style={{flexDirection:'row',alignItems:'center'}}>
-                <Image source={{uri:"file:///storage/emulated/0/Pictures/"+item.logo_entreprise+""}}   style={styles.image_select} />
+              <View key={i} style={[styles.ViewSelect,{flexDirection:'row',alignItems:'center'}]}>
+                <Image source={{uri:IMG_SERVER+"logo/"+item.logo_entreprise+""}}   style={styles.image_select} />
                 {item.nom_entreprise
                   ?
                   <>
@@ -362,14 +361,13 @@ const Prestation = ({route, navigation }) => {
                   true
                 }
               </View> 
-            </View>  
               
           ))}
 
           {choixBeneficiare.map((item,i) => (
             <TouchableOpacity key={i} style={styles.ViewSelect} onPress={()=>Retour()}>
               <View style={{flexDirection:'row',alignItems:'center'}}>
-               <Image source={{uri:"file:///storage/emulated/0/Pictures/"+item.icon_type_patient+""}}   style={styles.image_select} />
+               <Image source={{uri:IMG_SERVER+"beneficiaire/"+item.icon_type_patient+""}}   style={styles.image_select} />
                 {item.lib_type_patient
                   ?
                   <>

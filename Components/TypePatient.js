@@ -1,5 +1,6 @@
 import React from 'react';
 import {  FlatList,View, Text, TouchableOpacity, Image } from 'react-native';import styles from './Style';
+import {IMG_SERVER} from './constants';
 
 const bg_cie = require('./Img/cie.png');
 
@@ -8,7 +9,7 @@ const TypePatient = ({ posts,next_step }) => {
     
     const Item = ({title,id,logo,statut_logo,beneficiare_total}) => (
         <TouchableOpacity style={styles.container_entreprise} onPress={() => next_step(id)}>
-            <Image source={{uri:"file:///storage/emulated/0/Pictures/"+logo+""}}   resizeMode='contain' style={styles.image_logo} />
+            <Image source={{uri:IMG_SERVER+"beneficiaire/"+logo+""}}   resizeMode='contain' style={styles.image_logo} />
             <View style={styles.col_view}>
                 { title 
                 ? 

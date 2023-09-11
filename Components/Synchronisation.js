@@ -9,7 +9,7 @@ let db = SQLite.openDatabase("gfa.db", "1.0", "OXYGENECI", -1);
 
 const Synchronisation = ({les_entreprises}) => {
     /*DEBUT MISE A JOUR */
-  const [checkDownloadImgEntreprise, setcheckDownloadImgEntreprise] = useState(false);
+  /* const [checkDownloadImgEntreprise, setcheckDownloadImgEntreprise] = useState(false);
   const [checkDownloadImgpatient, setcheckDownloadImgpatient] = useState(false);
   const [checkDownloadImgprestation, setcheckDownloadImgprestation] = useState(false);
 
@@ -18,12 +18,12 @@ const Synchronisation = ({les_entreprises}) => {
   const [PicturePatient, SetPicturePatient] = useState('');
   const [IdpicturePatient, SetIdpicturePatient] = useState('');
   const [PicturePrestation, SetPicturePrestation] = useState('');
-  const [IdpicturePrestation, SetIdpicturePrestation] = useState('');
+  const [IdpicturePrestation, SetIdpicturePrestation] = useState(''); */
   useEffect(()=>{
     const timer_misej = setInterval(() => {
       synchro_DATA();
       
-      if(checkDownloadImgEntreprise==false){
+      /* if(checkDownloadImgEntreprise==false){
         checkDownloadImgEntreprise_process();
       }
       if(checkDownloadImgpatient==false){
@@ -31,7 +31,7 @@ const Synchronisation = ({les_entreprises}) => {
       }
       if(checkDownloadImgprestation==false){
         checkDownloadImgprestation_process();
-      }
+      } */
 
     }, 5000);
     return () => {
@@ -41,7 +41,7 @@ const Synchronisation = ({les_entreprises}) => {
 
   },[])
 
-  useEffect(() => {
+  /* useEffect(() => {
     if(checkDownloadImgEntreprise==true){
       CheckFileExist("entreprises");
     }
@@ -142,7 +142,7 @@ const Synchronisation = ({les_entreprises}) => {
     // To get the file extension
     return /[.]/.exec(filename) ?
               /[^.]+$/.exec(filename) : undefined;
-  };
+  }; */
 
   const synchro_DATA=()=>{
     db.transaction((tx) => {
@@ -169,10 +169,6 @@ const Synchronisation = ({les_entreprises}) => {
             les_entreprises();
             
           }) 
-        })
-        .catch(err=>{
-          
-          
         })
               
       });
@@ -201,10 +197,6 @@ const Synchronisation = ({les_entreprises}) => {
             });
             
           }) 
-        })
-        .catch(err=>{
-          
-          
         })
               
       });
@@ -235,17 +227,13 @@ const Synchronisation = ({les_entreprises}) => {
             
           }) 
         })
-        .catch(err=>{
-          
-          
-        })
               
       });
       
     });
 
   }
-  const checkDownloadImgEntreprise_process=()=>{
+  /* const checkDownloadImgEntreprise_process=()=>{
     db.transaction(function(tx){
       tx.executeSql("SELECT * FROM entreprises WHERE logo_entreprise!='non defini' and deleted='faux' and statut_img='0' limit 1 ", [], function(tx, results){
           
@@ -421,7 +409,7 @@ const Synchronisation = ({les_entreprises}) => {
 
 
     
-  }
+  } */
 
   /*FIN MISE A JOUR */
 };

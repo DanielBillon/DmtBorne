@@ -82,7 +82,7 @@ const styles = StyleSheet.create({
     },
     TextNum_select: {
         fontSize: 29,
-        padding: 10,
+        /* padding: 10, */
         color: 'white'
     },
     
@@ -99,7 +99,7 @@ const styles = StyleSheet.create({
     },
     TextNum: {
         fontSize: 29,
-        padding: 10,
+        /* padding: 10, */
         color: 'black'
     }, 
     
