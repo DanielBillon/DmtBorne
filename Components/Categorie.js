@@ -5,40 +5,44 @@ import SQLite, { openDatabase } from 'react-native-sqlite-storage';
 import styles from './Style';
 import {IMG_SERVER} from './constants';
 
-const bg = require('./Img/background_white.png');
-
 let db = SQLite.openDatabase("gfa.db", "1.0", "OXYGENECI", -1);
 
-const Beneficiaire = ({next_step}) => {
-  const page='beneficiaire';
+const Categorie = ({next_step}) => {
+  const page='categorie';
 
-  const [listeBeneficiaire, setListeBeneficiaire] = useState(['']);
+  const [listeCategorie, setListeCategorie] = useState(['']);
   const [currentPage, setCurrentPage] = useState(1);
   const [postsPerPage] = useState(6);
 
   const indexOfLastPost = currentPage * postsPerPage;
   const indexOfFirstPost = indexOfLastPost - postsPerPage;
-  const currentPosts = listeBeneficiaire.slice(indexOfFirstPost, indexOfLastPost);
+  const currentPosts = listeCategorie.slice(indexOfFirstPost, indexOfLastPost);
 
-  
+
+
   useEffect(() => {
-    les_beneficiaire();
+    les_categories();
   }, [currentPage])
 
-  const les_beneficiaire=()=>{
+
+  const les_categories=()=>{
     db.transaction((tx) => {
-      tx.executeSql("SELECT * FROM type_patient WHERE deleted='faux'", [], (tx, results) => {
+      tx.executeSql("SELECT id_prestation,id_categorie,categorie,sous_categorie,icon_categorie,prefixe_prestation FROM categorie INNER JOIN prestations USING(id_categorie) WHERE categorie.deleted='faux' GROUP BY id_categorie", [], (tx, results) => {
         var len = results.rows.length;
         const data = [];
         for (let i = 0; i < len; i++) {
           let row = results.rows.item(i);
           data.push(row);
-          //console.log(`operation: ${row.lib_type_patient}`);
+          //console.log(`id_prestation: ${row.id_prestation}`);
         }
-        setListeBeneficiaire(data);
+        setListeCategorie(data);
       }, null);
     })
   }
+
+  
+
+  
 
   const paginate = (pageNumber) => {
     setCurrentPage(pageNumber);
@@ -51,14 +55,15 @@ const Beneficiaire = ({next_step}) => {
   };
 
   const nextPage = () => {
-    if (currentPage !== Math.ceil(listeBeneficiaire.length / postsPerPage)) {
+    if (currentPage !== Math.ceil(listePrestation.length / postsPerPage)) {
       setCurrentPage(currentPage + 1);
     } 
   };
+  
 
-  const Item = ({title,id,logo,statut_logo,beneficiare_total}) => (
-    <TouchableOpacity style={styles.container_entreprise} onPress={() => next_step(id,page)}>
-        <Image source={{uri:IMG_SERVER+"beneficiaire/"+logo+""}}   resizeMode='contain' style={styles.image_logo} />
+  const Item = ({title,id,logo,sous_categorie,prefixe_prestation,id_prestation}) => (
+    <TouchableOpacity style={styles.container_entreprise} onPress={() => next_step(id,page,sous_categorie,title,prefixe_prestation,id_prestation)}>
+        <Image source={{uri:IMG_SERVER+"icon_prestation/"+logo+""}}   resizeMode='contain' style={styles.image_logo} />
         <View style={styles.col_view}>
             { title 
             ? 
@@ -89,39 +94,36 @@ const Beneficiaire = ({next_step}) => {
   );
 
 
+
   return (
     <View >
-      
       <View>
         <Paginate 
           postsPerPage={postsPerPage} 
-          totalPosts={listeBeneficiaire.length} 
+          totalPosts={listeCategorie.length} 
           paginate={paginate} 
           previousPage={previousPage}
           nextPage={nextPage} 
           currentPage={currentPage}
-        /> 
+        />
         
       </View>
-
       <View>
         <FlatList
           data={currentPosts}
           numColumns={3}
           horizontal={false}
-          renderItem={({item}) => <Item title={item.lib_type_patient} id={item.id_type_patient} logo={item.icon_type_patient} statut_logo={item.statut_img}  beneficiare_total={currentPosts.length}/>}
-          keyExtractor={item => item.id_type_patient}
+          renderItem={({item}) => <Item title={item.categorie} id={item.id_categorie} logo={item.icon_categorie} sous_categorie={item.sous_categorie} prefixe_prestation={item.prefixe_prestation} id_prestation={item.id_prestation}/>}
+          keyExtractor={item => item.id_categorie}
           contentContainerStyle={{
-            alignItems:'center',
+          alignItems:'center',
           }}
         />
       </View>
-      
-      
       
     </View>
   );
 };
 
-export default Beneficiaire;
+export default Categorie;
 

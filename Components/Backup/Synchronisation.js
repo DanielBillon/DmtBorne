@@ -7,7 +7,7 @@ import axios from 'axios';
 
 let db = SQLite.openDatabase("gfa.db", "1.0", "OXYGENECI", -1);
 
-const Synchronisation = (/* {les_entreprises} */) => {
+const Synchronisation = ({les_entreprises}) => {
     /*DEBUT MISE A JOUR */
   /* const [checkDownloadImgEntreprise, setcheckDownloadImgEntreprise] = useState(false);
   const [checkDownloadImgpatient, setcheckDownloadImgpatient] = useState(false);
@@ -166,7 +166,7 @@ const Synchronisation = (/* {les_entreprises} */) => {
             db.transaction(function(tx){
                 tx.executeSql('INSERT OR REPLACE into entreprises (id_entreprise,nom_entreprise,logo_entreprise,deleted,last_modified,statut_img) VALUES (?,?,?,?,?,?)', [id_entreprise,nom_entreprise,logo_entreprise,deleted,last_modified,statut_img]);
             });
-            //les_entreprises();
+            les_entreprises();
             
           }) 
         })

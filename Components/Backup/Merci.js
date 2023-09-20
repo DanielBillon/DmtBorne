@@ -1,5 +1,5 @@
-import React, {useEffect } from 'react';
-import {ImageBackground} from 'react-native';
+import React, { useState, useEffect } from 'react';
+import {Alert,Dimensions,TextInput,StatusBar,Text, View,ImageBackground,TouchableOpacity,Image,Animated,Easing} from 'react-native';
 import SQLite, { openDatabase } from 'react-native-sqlite-storage';
 import styles from './Style';
 import Tts from 'react-native-tts';

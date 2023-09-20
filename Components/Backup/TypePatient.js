@@ -1,6 +1,5 @@
 import React from 'react';
-import {  FlatList,View, Text, TouchableOpacity, Image } from 'react-native';
-import styles from './Style';
+import {  FlatList,View, Text, TouchableOpacity, Image } from 'react-native';import styles from './Style';
 import {IMG_SERVER} from './constants';
 
 const bg_cie = require('./Img/cie.png');
@@ -53,7 +52,13 @@ const TypePatient = ({ posts,next_step }) => {
             renderItem={({item}) => <Item title={item.lib_type_patient} id={item.id_type_patient} logo={item.icon_type_patient} statut_logo={item.statut_img}  beneficiare_total={posts.length}/>}
             keyExtractor={item => item.id_type_patient}
             contentContainerStyle={{
-             alignItems:'center',
+           /*  paddingLeft: 8,
+            paddingRight: 8,
+            paddingBottom: 18,
+            paddingTop: 16, */
+            alignItems:'center',
+
+
             }}
         />
         

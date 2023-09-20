@@ -1,16 +1,13 @@
-import React from 'react';
-import {  FlatList,View, Text, TouchableOpacity, Image } from 'react-native';
-import styles from './Style';
+import React, { useState, useEffect } from 'react';
+import { StatusBar, FlatList,SafeAreaView, Modal, Pressable, View, ImageBackground, Text, TouchableOpacity, Image, StyleSheet, Dimensions } from 'react-native';import styles from './Style';
 import {IMG_SERVER} from './constants';
 
-const bg_cie = require('./Img/cie.png');
+//const PrestationData = ({ posts,imprimer }) => {
+const PrestationData = ({ posts,next_step }) => {
 
-
-const TypePatient = ({ posts,next_step }) => {
-    
-    const Item = ({title,id,logo,statut_logo,beneficiare_total}) => (
-        <TouchableOpacity style={styles.container_entreprise} onPress={() => next_step(id)}>
-            <Image source={{uri:IMG_SERVER+"beneficiaire/"+logo+""}}   resizeMode='contain' style={styles.image_logo} />
+    const Item = ({title,id,logo,statut_logo,prefixe_prestation}) => (
+        <TouchableOpacity style={styles.container_entreprise} onPress={() => next_step(prefixe_prestation,title,id)}>
+            <Image source={{uri:IMG_SERVER+"icon_prestation/"+logo+""}}   resizeMode='contain' style={styles.image_logo} />
             <View style={styles.col_view}>
                 { title 
                 ? 
@@ -41,8 +38,6 @@ const TypePatient = ({ posts,next_step }) => {
     );
     
     
-    
-
   
   return (
     <View>
@@ -50,10 +45,10 @@ const TypePatient = ({ posts,next_step }) => {
             data={posts}
             numColumns={3}
             horizontal={false}
-            renderItem={({item}) => <Item title={item.lib_type_patient} id={item.id_type_patient} logo={item.icon_type_patient} statut_logo={item.statut_img}  beneficiare_total={posts.length}/>}
-            keyExtractor={item => item.id_type_patient}
+            renderItem={({item}) => <Item title={item.lib_prestation} id={item.id_prestation} logo={item.icon_prestation} statut_logo={item.statut_img} prefixe_prestation={item.prefixe_prestation}/>}
+            keyExtractor={item => item.id_prestation}
             contentContainerStyle={{
-             alignItems:'center',
+            alignItems:'center',
             }}
         />
         
@@ -64,5 +59,5 @@ const TypePatient = ({ posts,next_step }) => {
 
 
 
-export default TypePatient;
+export default PrestationData;
 
