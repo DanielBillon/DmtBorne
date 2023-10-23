@@ -65,7 +65,7 @@ const Entreprise = ({next_step}) => {
 
   
   return (
-    <View>
+    <View >
         <View>
             <Paginate 
             postsPerPage={postsPerPage} 
@@ -76,28 +76,31 @@ const Entreprise = ({next_step}) => {
             currentPage={currentPage}
             /> 
         
-      </View>
-      <View>
-        <FlatList
-            data={currentPosts}
-            numColumns={3}
-            horizontal={false}
-            renderItem={({item}) => <Item title={item.nom_entreprise} id={item.id_entreprise} logo={item.logo_entreprise} statut_logo={item.statut_img}/>}
-            keyExtractor={item => item.id_entreprise}
-            contentContainerStyle={{
-            /* paddingLeft: 8,
-            paddingRight: 8,
-            paddingBottom: 18,
-            paddingTop: 16, */
-            alignItems:'center',
+        </View>
+        <View>
+
+        </View>
+        <View >
+            <FlatList
+                data={currentPosts}
+                numColumns={3}
+                horizontal={false}
+                renderItem={({item}) => <Item title={item.nom_entreprise} id={item.id_entreprise} logo={item.logo_entreprise} statut_logo={item.statut_img}/>}
+                keyExtractor={item => item.id_entreprise}
+                contentContainerStyle={{
+                /* paddingLeft: 8,
+                paddingRight: 8,
+                paddingBottom: 18,
+                paddingTop: 16, */
+                alignItems:'center',
 
 
-            }}
-        />
+                }}
+            />
         </View>
         
        
-      </View> 
+    </View> 
   );
 };
 

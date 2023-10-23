@@ -150,10 +150,10 @@ const Bottom = ({ Screen,id_entreprise,id_beneficiaire,id_prestation,lib_sexe,Ho
                         {item.lib_prestation.length > 14 && item.lib_prestation.length <= 18 &&(
                         <Text style={styles.text_small}>{item.lib_prestation}</Text>
                         )}
-                        {item.lib_prestation.length > 18 && item.lib_prestation.length <= 46  &&(
+                        {item.lib_prestation.length > 18 && item.lib_prestation.length <= 37  &&(
                         <Text style={styles.text_22}>{item.lib_prestation}</Text>
                         )}
-                        {item.lib_prestation.length > 46  && item.lib_prestation.length <= 59  &&(
+                        {item.lib_prestation.length > 37  && item.lib_prestation.length <= 59  &&(
                         <Text style={styles.text_17}>{item.lib_prestation}</Text>
                         )}
                         {item.lib_prestation.length > 59  &&(

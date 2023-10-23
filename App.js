@@ -8,12 +8,8 @@ import Loading from './Components/Loading';
 import ConfigIp from './Components/ConfigIp';
 import Accueil from './Components/Accueil';
  
-import Beneficiaire from './Components/Beneficiaire';
-import Prestation from './Components/Prestation';
 import Merci from './Components/Merci';
 import Restart from './Components/Restart';
-import Sexe from './Components/Sexe';
-import Annee_naissance from './Components/Annee_naissance';
 import { LogBox } from 'react-native';
 
 // Ignore all log notifications:
@@ -40,12 +36,8 @@ const App = () => {
         <Stack.Screen name="Loading" component={Loading} />  
         <Stack.Screen name="ConfigIp" component={ConfigIp} />  
         <Stack.Screen name="Accueil" component={Accueil} />  
-        <Stack.Screen name="Beneficiaire" component={Beneficiaire} />  
-        <Stack.Screen name="Prestation" component={Prestation} />   
         <Stack.Screen name="Merci" component={Merci} />  
         <Stack.Screen name="Restart" component={Restart} /> 
-        <Stack.Screen name="Sexe" component={Sexe} />
-        <Stack.Screen name="Annee_naissance" component={Annee_naissance} />
               
       </Stack.Navigator>
     </NavigationContainer>

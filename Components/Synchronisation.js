@@ -7,32 +7,11 @@ import axios from 'axios';
 
 let db = SQLite.openDatabase("gfa.db", "1.0", "OXYGENECI", -1);
 
-const Synchronisation = (/* {les_entreprises} */) => {
+const Synchronisation = ({Retour,Screen}) => {
     /*DEBUT MISE A JOUR */
-  /* const [checkDownloadImgEntreprise, setcheckDownloadImgEntreprise] = useState(false);
-  const [checkDownloadImgpatient, setcheckDownloadImgpatient] = useState(false);
-  const [checkDownloadImgprestation, setcheckDownloadImgprestation] = useState(false);
-
-  const [PictureEntreprise, SetPictureEntreprise] = useState('');
-  const [IdpictureEntreprise, SetIdpictureEntreprise] = useState('');
-  const [PicturePatient, SetPicturePatient] = useState('');
-  const [IdpicturePatient, SetIdpicturePatient] = useState('');
-  const [PicturePrestation, SetPicturePrestation] = useState('');
-  const [IdpicturePrestation, SetIdpicturePrestation] = useState(''); */
   useEffect(()=>{
     const timer_misej = setInterval(() => {
       synchro_DATA();
-      
-      /* if(checkDownloadImgEntreprise==false){
-        checkDownloadImgEntreprise_process();
-      }
-      if(checkDownloadImgpatient==false){
-        checkDownloadImgpatient_process();
-      }
-      if(checkDownloadImgprestation==false){
-        checkDownloadImgprestation_process();
-      } */
-
     }, 5000);
     return () => {
       clearInterval(timer_misej);
@@ -41,108 +20,6 @@ const Synchronisation = (/* {les_entreprises} */) => {
 
   },[])
 
-  /* useEffect(() => {
-    if(checkDownloadImgEntreprise==true){
-      CheckFileExist("entreprises");
-    }
-  }, [checkDownloadImgEntreprise])
-
-  useEffect(() => {
-    if(checkDownloadImgpatient==true){
-      CheckFileExist("type_patient");
-    }
-  }, [checkDownloadImgpatient])
-
-  useEffect(() => {
-    if(checkDownloadImgprestation==true){
-      CheckFileExist("prestations");
-    }
-  }, [checkDownloadImgprestation])
-
-
-  const CheckFileExist=(table)=>{
-    if(table=='entreprises'){
-      var Image=PictureEntreprise;
-    }
-
-    if(table=='type_patient'){
-      var Image=PicturePatient;
-    }
-
-    if(table=='prestations'){
-      var Image=PicturePrestation;
-    }
-    
-    var PATH_OF_FILE="file:///storage/emulated/0/Pictures/"+Image+"";
-    //console.log("PATH_OF_FILE: file:///storage/emulated/0/Pictures/"+Image);
-    RNFetchBlob.fs.exists(PATH_OF_FILE)
-    .then((exist) => {
-      var result=exist;
-      //console.warn("result : "+exist);
-      console.log(`file ${exist ? '' : 'not'} exists`)
-      ////IMAGE EXISTE
-      if(result==true){
-        if(table=='entreprises'){
-          db.transaction(function(tx){
-            tx.executeSql("UPDATE entreprises SET statut_img='1' WHERE id_entreprise=?", [IdpictureEntreprise]);
-            SetIdpictureEntreprise('');
-            SetPictureEntreprise('');
-            setcheckDownloadImgEntreprise(false);
-          });
-
-        }
-    
-        if(table=='type_patient'){
-          db.transaction(function(tx){
-            tx.executeSql("UPDATE type_patient SET statut_img='1' WHERE id_type_patient=?", [IdpicturePatient]);
-            SetIdpicturePatient('');
-            SetPicturePatient('');
-            setcheckDownloadImgpatient(false);
-          });
-    
-        }
-    
-        if(table=='prestations'){
-          db.transaction(function(tx){
-            tx.executeSql("UPDATE prestations SET statut_img='1' WHERE id_prestation=?", [IdpicturePrestation]);
-            SetIdpicturePrestation('');
-            SetPicturePrestation('');
-            setcheckDownloadImgprestation(false);
-          });
-    
-        }
-        
-        console.log('Image Downloaded Successfully.');
-      }
-      ////IMAGE EXISTE PAS
-      else{
-        if(table=='entreprises'){
-          startdownload_imgEntreprise();
-        }
-    
-        if(table=='type_patient'){
-          startdownload_imgPatient();
-        }
-    
-        if(table=='prestations'){
-          startdownload_imgPrestation();
-        }
-      }
-        
-    })
-    .catch(() => { 
-      console.error("Error vérification d'existance");
-    })
-
-  }
-
-
-
-  const getExtention = filename => {
-    // To get the file extension
-    return /[.]/.exec(filename) ?
-              /[^.]+$/.exec(filename) : undefined;
-  }; */
 
   const synchro_DATA=()=>{
     db.transaction((tx) => {
@@ -156,6 +33,7 @@ const Synchronisation = (/* {les_entreprises} */) => {
         axios.get(url)
         .then(res => {
           const data = res.data;
+          //console.log("ENTREPRISE DATA : " +data.length);
           return data.map(function(donnees) {
             let id_entreprise=donnees.id_entreprise;
             let nom_entreprise=donnees.nom_entreprise;
@@ -166,13 +44,12 @@ const Synchronisation = (/* {les_entreprises} */) => {
             db.transaction(function(tx){
                 tx.executeSql('INSERT OR REPLACE into entreprises (id_entreprise,nom_entreprise,logo_entreprise,deleted,last_modified,statut_img) VALUES (?,?,?,?,?,?)', [id_entreprise,nom_entreprise,logo_entreprise,deleted,last_modified,statut_img]);
             });
-            //les_entreprises();
             
           }) 
-        })
+        })        
               
       });
-
+      
       ////SYNCHRO TYPE PATIENT
       tx.executeSql('SELECT MAX(last_modified)AS last_modified FROM type_patient  limit 1', [], function(tx, results){
         var work = results.rows.item(0);  
@@ -183,7 +60,6 @@ const Synchronisation = (/* {les_entreprises} */) => {
         axios.get(url)
         .then(res => {
           const data = res.data;
-          
           return data.map(function(donnees) {
             //console.log(donnees);
             let id_type_patient=donnees.id_type_patient;
@@ -201,6 +77,33 @@ const Synchronisation = (/* {les_entreprises} */) => {
               
       });
 
+      ////SYNCHRO CATEGORIE
+      tx.executeSql('SELECT MAX(last_modified)AS last_modified FROM categorie limit 1', [], function(tx, results){
+        var work = results.rows.item(0);  
+        var last_modified=work.last_modified;
+        //console.log("MAX DATE : "+last_modified );
+        let url=IP_SERVER+"/check_appel.php?last_modified="+last_modified+"&get_data_categorie";
+        //console.log("url 1:"+ url);
+        axios.get(url)
+        .then(res => {
+          const data = res.data;
+          return data.map(function(donnees) {
+            //console.log(donnees);
+            let id_categorie=donnees.id_categorie;
+            let categorie=donnees.categorie;
+            let sous_categorie=donnees.sous_categorie;
+            let icon_categorie=donnees.icon_categorie;
+            let deleted=donnees.deleted;
+            let last_modified=donnees.last_modified;
+            db.transaction(function(tx){
+                tx.executeSql('INSERT OR REPLACE into categorie (id_categorie,categorie,sous_categorie,icon_categorie,deleted,last_modified) VALUES (?,?,?,?,?,?)', [id_categorie,categorie,sous_categorie,icon_categorie,deleted,last_modified]);
+            });
+            
+          }) 
+        })
+              
+      });
+
       ////SYNCHRO PRESTATIONS
       tx.executeSql('SELECT MAX(last_modified)AS last_modified FROM prestations  limit 1', [], function(tx, results){
         var work = results.rows.item(0);  
@@ -211,7 +114,6 @@ const Synchronisation = (/* {les_entreprises} */) => {
         axios.get(url)
         .then(res => {
           const data = res.data;
-          
           return data.map(function(donnees) {
             //console.log(donnees);
             let id_prestation=donnees.id_prestation;
@@ -220,9 +122,10 @@ const Synchronisation = (/* {les_entreprises} */) => {
             let icon_prestation=donnees.icon_prestation;
             let deleted=donnees.deleted;
             let last_modified=donnees.last_modified;
+            let id_categorie=donnees.id_categorie;
             let statut_img=0;
             db.transaction(function(tx){
-                tx.executeSql('INSERT OR REPLACE into prestations (id_prestation,lib_prestation,prefixe_prestation,icon_prestation,deleted,last_modified,statut_img) VALUES (?,?,?,?,?,?,?)', [id_prestation,lib_prestation,prefixe_prestation,icon_prestation,deleted,last_modified,statut_img]);
+                tx.executeSql('INSERT OR REPLACE into prestations (id_prestation,lib_prestation,prefixe_prestation,icon_prestation,deleted,last_modified,statut_img,id_categorie) VALUES (?,?,?,?,?,?,?,?)', [id_prestation,lib_prestation,prefixe_prestation,icon_prestation,deleted,last_modified,statut_img,id_categorie]);
             });
             
           }) 
@@ -233,183 +136,7 @@ const Synchronisation = (/* {les_entreprises} */) => {
     });
 
   }
-  /* const checkDownloadImgEntreprise_process=()=>{
-    db.transaction(function(tx){
-      tx.executeSql("SELECT * FROM entreprises WHERE logo_entreprise!='non defini' and deleted='faux' and statut_img='0' limit 1 ", [], function(tx, results){
-          
-        var nb_data= results.rows.length;
-        
-        if(nb_data!='0'){
-          var work = results.rows.item(0);  
-          var image=work.logo_entreprise;
-          var id_entreprise=work.id_entreprise;
-          SetPictureEntreprise(image);
-          SetIdpictureEntreprise(id_entreprise);
-          setcheckDownloadImgEntreprise(true);
-          
-        }
-      });                    
-    });
-  }
-
-  const startdownload_imgEntreprise=()=>{
-    var liste = PictureEntreprise.split(".");
-    console.log("img dowload: "+PictureEntreprise);
-    let date = new Date();
-    // Image URL which we want to download
-    let image_URL = IP_SERVER+"/img/logo/"+PictureEntreprise+"";    
-    console.log(image_URL);
-    // Getting the extention of the file
-    let ext = getExtention(image_URL);
-    ext = '.' + ext[0];
-    // Get config and fs from RNFetchBlob
-    // config: To pass the downloading related options
-    // fs: Directory path where we want our image to download
-    const { config, fs } = RNFetchBlob;
-    let PictureDir = fs.dirs.PictureDir;
-    let options = {
-      fileCache: true,
-      addAndroidDownloads: {
-        // Related to the Android only
-        useDownloadManager: true,
-        notification: true,
-        path:
-          PictureDir +'/'+ liste[0] + ext,
-        description: 'Image',
-      },
-    };
-    config(options)
-    .fetch('GET', image_URL)
-    .then(res => {
-      // Showing alert after successful downloading
-      console.log('res -> ', JSON.stringify(res));
-      //console.log(JSON.stringify(res.data));
-      CheckFileExist("entreprises");
-      
-
-
-    })
-
-    
-  }
-
-  const checkDownloadImgpatient_process=()=>{
-    db.transaction(function(tx){
-      tx.executeSql("SELECT * FROM type_patient WHERE icon_type_patient!='non defini' and deleted='faux' and statut_img='0' limit 1 ", [], function(tx, results){
-          
-        var nb_data= results.rows.length;
-        
-        if(nb_data!='0'){
-          var work = results.rows.item(0);  
-          var image=work.icon_type_patient;
-          var id_type_patient=work.id_type_patient;
-          SetPicturePatient(image);
-          SetIdpicturePatient(id_type_patient);
-          setcheckDownloadImgpatient(true);
-          
-        }
-      });                    
-    });
-  }
-
-  const checkDownloadImgprestation_process=()=>{
-    db.transaction(function(tx){
-      tx.executeSql("SELECT * FROM prestations WHERE icon_prestation!='non defini' and deleted='faux' and statut_img='0' limit 1 ", [], function(tx, results){
-          
-        var nb_data= results.rows.length;
-        
-        if(nb_data!='0'){
-          var work = results.rows.item(0);  
-          var image=work.icon_prestation;
-          var id_prestation=work.id_prestation;
-          SetPicturePrestation(image);
-          SetIdpicturePrestation(id_prestation);
-          setcheckDownloadImgprestation(true);
-          
-        }
-      });                    
-    });
-
-  }
-
-  const startdownload_imgPatient=()=>{
-    var liste = PicturePatient.split(".");
-    console.log("img dowload: "+PicturePatient);
-    let date = new Date();
-    // Image URL which we want to download
-    let image_URL = IP_SERVER+"/img/logo/"+PicturePatient+"";    
-    console.log(image_URL);
-    // Getting the extention of the file
-    let ext = getExtention(image_URL);
-    ext = '.' + ext[0];
-    // Get config and fs from RNFetchBlob
-    // config: To pass the downloading related options
-    // fs: Directory path where we want our image to download
-    const { config, fs } = RNFetchBlob;
-    let PictureDir = fs.dirs.PictureDir;
-    let options = {
-      fileCache: true,
-      addAndroidDownloads: {
-        // Related to the Android only
-        useDownloadManager: true,
-        notification: true,
-        path:
-          PictureDir +'/'+ liste[0] + ext,
-        description: 'Image',
-      },
-    };
-    config(options)
-    .fetch('GET', image_URL)
-    .then(res => {
-      // Showing alert after successful downloading
-      console.log('res -> ', JSON.stringify(res));
-      //console.log(JSON.stringify(res.data));
-      CheckFileExist("type_patient");
-
-    })
-    
-  }
-
-  const startdownload_imgPrestation=()=>{
-    var liste = PicturePrestation.split(".");
-    console.log("img dowload: "+PicturePrestation);
-    let date = new Date();
-    // Image URL which we want to download
-    let image_URL = IP_SERVER+"/img/logo/"+PicturePrestation+"";    
-    console.log(image_URL);
-    // Getting the extention of the file
-    let ext = getExtention(image_URL);
-    ext = '.' + ext[0];
-    // Get config and fs from RNFetchBlob
-    // config: To pass the downloading related options
-    // fs: Directory path where we want our image to download
-    const { config, fs } = RNFetchBlob;
-    let PictureDir = fs.dirs.PictureDir;
-    let options = {
-      fileCache: true,
-      addAndroidDownloads: {
-        // Related to the Android only
-        useDownloadManager: true,
-        notification: true,
-        path:
-          PictureDir +'/'+ liste[0] + ext,
-        description: 'Image',
-      },
-    };
-    config(options)
-    .fetch('GET', image_URL)
-    .then(res => {
-      // Showing alert after successful downloading
-      console.log('res -> ', JSON.stringify(res));
-      //console.log(JSON.stringify(res.data));
-      CheckFileExist("prestations");
-
-
-    })
-
-
-    
-  } */
+  
 
   /*FIN MISE A JOUR */
 };

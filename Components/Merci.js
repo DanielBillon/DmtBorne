@@ -10,43 +10,25 @@ let db = SQLite.openDatabase("gfa.db", "1.0", "OXYGENECI", -1);
 
 const bg = require('./Img/merci_ticket.png');
 
-const Merci = ({route,navigation }) => {
-  const { IdInfirmerie,Infirmerie} = route.params;
+const Merci = ({next_step}) => {
+  const page='merci';
+
+  setTimeout(
+    function () {
+      next_step('merci',page);
+
+    }
+      .bind(this),
+    3000
+  );
+
   
 
-  useEffect(() => {
-    voix_printer();
-  }, [])
 
-  const voix_printer = () => {
-    Tts.stop();
-    const TEXTE_1_2 = "Veuillez récupérer votre ticket";
-    Tts.speak(TEXTE_1_2, {
-      androidParams: {
-        KEY_PARAM_PAN: -1,
-        KEY_PARAM_VOLUME: 1,
-        KEY_PARAM_STREAM: 'STREAM_MUSIC',
-      },
-    });
-    setTimeout(
-      function () {
-        navigation.navigate('Accueil',{
-          IdInfirmerie:IdInfirmerie,
-          Infirmerie:Infirmerie,
-        });
-
-      }
-        .bind(this),
-      3000
-    );
-
-  }
-
-
-  return (
+  /* return (
     <ImageBackground source={bg} resizeMode="stretch" style={styles.imagecontainer}>
     </ImageBackground>  
-  );
+  ); */
 };
 
 

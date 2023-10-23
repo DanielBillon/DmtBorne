@@ -124,6 +124,7 @@ const Accueil = ({route, navigation }) => {
         send_data();
         test_connexion();
         Niveaubattery();
+        client_attente();
       }, 2000);
       return () => {
         clearInterval(timer_maj_1);
@@ -215,6 +216,42 @@ const Accueil = ({route, navigation }) => {
       
     });
     
+  }
+
+  const client_attente = () => {
+    
+    let url=IP_SERVER+"/check_appel.php?get_en_attente";
+    //console.log("url 1:"+ url);
+    axios.get(url)
+    .then(res => {
+      const data = res.data;
+      //console.log("ENTREPRISE DATA : " +data.length);
+      return data.map(function(donnees) {
+        let date_ticket=donnees.date_ticket;
+        let id_prestation=donnees.id_prestation;
+        let total_attente=donnees.total_attente;
+
+        db.transaction((tx) => {
+          
+          tx.executeSql('SELECT * FROM personne_attente WHERE date_ticket=? AND id_prestation=?  limit 1', [date_ticket,id_prestation], function(tx, results){
+            var nb_data = results.rows.length;
+      
+            ///SI LA TABLE EST VIDE
+            if (nb_data == '0') {
+              tx.executeSql('INSERT into personne_attente (date_ticket,id_prestation,total_attente) VALUES (?,?,?)', [date_ticket,id_prestation,total_attente]);
+            }
+            else{
+              tx.executeSql('UPDATE personne_attente SET total_attente=?  where id_prestation=? AND date_ticket=?', [total_attente,id_prestation,date_ticket]);
+
+            }
+          
+                
+          });
+        })
+        
+      }) 
+    }) 
+
   }
   
 
@@ -471,11 +508,28 @@ const Accueil = ({route, navigation }) => {
   }
   
   const imprimer = (prefixe, name_ope, id_op,date_naiss) => {
+    const today = dyn_date();
     //var id=1;
     ////NOMBRE DE PATIENT ATTENTE
+    db.transaction((tx) => {
+      tx.executeSql("SELECT total_attente FROM personne_attente where  id_prestation=? and date_ticket=? limit 1", [id_op, today], function (tx, results) {
+        var tt_ligne = results.rows.length;
+
+        if (tt_ligne > '0') {
+          var work = results.rows.item(0);
+          var en_attente = work.total_attente;
+        }
+        else if (tt_ligne == '0') {
+          var en_attente = 0;
+        }
+        start_impression(en_attente,prefixe, name_ope, id_op,date_naiss);
+
+      });
+
+    });
 
     /* let url= IP_SERVER+"/check_appel.php?get_en_attente&id_prestation="+id_op;
-    //console.log(url);
+    console.log("PATIENT ATTENTE : " +url);
     axios.get(url)
     .then(res => {
       const data = res.data[0].en_attente;
@@ -486,12 +540,10 @@ const Accueil = ({route, navigation }) => {
       const data=0;
       start_impression(data,prefixe, name_ope, id_op,date_naiss);
     }) */
-    start_impression(prefixe, name_ope, id_op,date_naiss);
 
   }
 
-  //const start_impression=(en_attente,prefixe, name_ope, id_op,date_naiss)=>{
-  const start_impression=(prefixe, name_ope, id_op,date_naiss)=>{
+  const start_impression=(en_attente,prefixe, name_ope, id_op,date_naiss)=>{
     const today = dyn_date();
     let operation_id = id_op;
     let operation_nom = name_ope;
@@ -506,12 +558,12 @@ const Accueil = ({route, navigation }) => {
         if (tt_ligne > '0') {
           var work = results.rows.item(0);
           var seq = parseInt(work.seq);
-          /* if (en_attente > '1') {
+          if (en_attente > '1') {
             var pluriel_attente = 's';
           }
           else {
             var pluriel_attente = '';
-          } */
+          }
           //console.log(seq);
           var v_1 = seq + parseInt(1);
 
@@ -538,12 +590,12 @@ const Accueil = ({route, navigation }) => {
         else if (tt_ligne == '0') {
           var sequence = "001";
           var num_ticket = operation_prefixe + "" + sequence;
-          /* if (en_attente > '1') {
+          if (en_attente > '1') {
             var pluriel_attente = 's';
           }
           else {
             var pluriel_attente = '';
-          } */
+          }
 
 
         }
@@ -587,8 +639,8 @@ const Accueil = ({route, navigation }) => {
         cmds += '\x1B' + '\x61' + '\x31'; // center align
         cmds += "" + date_format + ", " + time + " " + '\x0A';
         cmds += '\x1B' + '\x61' + '\x31'; // center align
-        //cmds += "" + en_attente + " personne" + pluriel_attente + " avant vous" + '\x0A';
-        //cmds += '\x1B' + '\x61' + '\x31'; // center align
+        cmds += "" + en_attente + " personne" + pluriel_attente + " avant vous" + '\x0A';
+        cmds += '\x1B' + '\x61' + '\x31'; // center align
         cmds += 'Veuillez patienter s\'il vous plait';
         cmds += '\x0A' + '\x0A';                   // line break
         cmds += '\x1B' + '\x61' + '\x31'; // center align

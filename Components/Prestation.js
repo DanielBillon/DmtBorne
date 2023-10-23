@@ -1,12 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { View, ImageBackground, Text, TouchableOpacity, Image,FlatList } from 'react-native';
+import { View, Text, TouchableOpacity, Image,FlatList } from 'react-native';
 import Paginate from './Paginate';
-import PrestationData from './PrestationData';
 import SQLite, { openDatabase } from 'react-native-sqlite-storage';
 import styles from './Style';
-import Tts from 'react-native-tts';
-import {IP_SERVER,IMG_SERVER} from './constants';
-import axios from 'axios';
+import {IMG_SERVER} from './constants';
 
 let db = SQLite.openDatabase("gfa.db", "1.0", "OXYGENECI", -1);
 
@@ -76,7 +73,7 @@ const Prestation = ({next_step,id_categorie}) => {
                 <Text style={styles.text_small}>{title}</Text>
                 )}
                 {title.length > 18 && title.length <= 46  &&(
-                <Text style={styles.text_22}>{title}</Text>
+                <Text style={styles.text_20}>{title}</Text>
                 )}
                 {title.length > 46  && title.length <= 59  &&(
                 <Text style={styles.text_17}>{title}</Text>
@@ -98,7 +95,7 @@ const Prestation = ({next_step,id_categorie}) => {
 
   return (
     <View >
-      <View>
+      <View >
         <Paginate 
           postsPerPage={postsPerPage} 
           totalPosts={listePrestation.length} 

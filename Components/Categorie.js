@@ -75,7 +75,7 @@ const Categorie = ({next_step}) => {
                 <Text style={styles.text_small}>{title}</Text>
                 )}
                 {title.length > 18 && title.length <= 46  &&(
-                <Text style={styles.text_22}>{title}</Text>
+                <Text style={styles.text_20}>{title}</Text>
                 )}
                 {title.length > 46  && title.length <= 59  &&(
                 <Text style={styles.text_17}>{title}</Text>

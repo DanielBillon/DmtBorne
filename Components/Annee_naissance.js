@@ -6,7 +6,8 @@ import {calcule_age} from './constants';
 //const bg = require('./Img/background_white.png');
 
 
-const Annee_naissance = ({next_step}) => {
+const Annee_naissance = ({next_step,title}) => {
+  //console.log(title);
   const page='annee_naissance';
 
   const [annee, setAnnee] = useState('');
@@ -32,34 +33,52 @@ const Annee_naissance = ({next_step}) => {
                         
             <View style={styles.ViewAnnee}>
 
-              <View style={{ width: '100%',alignItems:'center' }}>
+              <View style={{ width: '95%',alignItems:'center' }}>
                 {annee.length>'0'
                   ?
                   <>
-                    <TextInput style={styles.InputAnnee} editable={false} value={annee} />
-                    {/* {calcule_age(annee)>0 && calcule_age(annee)<=100
+                    {/* <TextInput style={styles.InputAnnee} editable={false} value={annee} /> */}
+                    
+                    {calcule_age(annee)>0 && calcule_age(annee)<=100
                     ?
-                      <Text>{calcule_age(annee)} ans</Text>
-                    :
-                      <Text>Année de naissance invalide</Text>
+                    <>
+                      {(title=='Consultation pédiatre' || title=='pédiatre' || title=='Consultation pediatre' || title=='pediatre' || title=='consultation pédiatre' || title=='Pediatre' ||title=='consultation pediatre' || title=='Pédiatre' ||title==' Pédiatrie' || title=='Pediatrie' ||title=='pediatrie' || title=='pédiatrie' ) && calcule_age(annee)>18
+                      ?
+                        <Text style={{color:'red', fontWeight:'bold'}}>{calcule_age(annee)} ans | Seuls les enfants et adolescents (0 à 18 ans) peuvent consulter le pédiatre. </Text>
+                      :
+                        <Text style={{color:'green', fontWeight:'bold'}}>{calcule_age(annee)} ans</Text>
 
-                    } */}
+                      }
+                      </>
+                      
+                    :
+                      <>
+                      {annee.length==4 &&
+                        <Text style={{color:'red', fontWeight:'bold'}}>Année de naissance invalide</Text>
+
+                      }
+                      </>
+
+                    }
+
+                    
+                    <Text style={styles.InputAnnee}>{annee} </Text>
                     
                   </>  
 
                   : 
-                    <TextInput style={styles.InputAnnee} editable={false} placeholder="Année de naissance" /> 
+                    <Text style={styles.InputAnnee}>Année de naissance</Text>
                 }
                 
               </View>
-              {/* <View style={{ width: '5%' }}>
+              <View style={{ width: '5%' }}>
                 {annee.length>'0'&&
                   <TouchableOpacity onPress={() => setAnnee(annee.substr(0, annee.length - 1))}>
-                    <Image source={require('./Img/supp.png')}  />
+                    <Image source={require('./Img/supp_black.png')}  />
                   </TouchableOpacity>
                 }
                 
-              </View> */}
+              </View>
             </View>
 
             <View style={{ width: '100%' }}>
@@ -100,20 +119,28 @@ const Annee_naissance = ({next_step}) => {
               </View>
 
               <View style={{ flexDirection: 'row' }}>
-                <View style={styles.ViewNum} >
-                  <TouchableOpacity onPress={() => setAnnee(annee.substr(0, annee.length - 1))}>
-                      <Image source={require('./Img/supp_orange.png')}  />
-                    </TouchableOpacity>
-                </View>
+                <TouchableOpacity style={styles.ViewNum_passer} onPress={() =>next_step('',page) }>
+                  <Text style={styles.TextNumValide}>PASSER</Text>
+                </TouchableOpacity>
+
                 <View style={styles.ViewNum} onTouchStart={() => add_annee("0")}>
                   <Text style={styles.TextNum}>0</Text>
                 </View>
                   {calcule_age(annee)>0 && calcule_age(annee)<=100
 
                     ?
-                      <View style={styles.ViewNumValide} onTouchStart={() =>next_step(annee,page)}>
-                        <Text style={styles.TextNumValide}>Valider</Text>
-                      </View>
+                    <>
+                      {(title=='Consultation pédiatre' || title=='pédiatre' || title=='Consultation pediatre' || title=='pediatre' || title=='consultation pédiatre' || title=='Pediatre' ||title=='consultation pediatre' || title=='Pédiatre' ||title==' Pédiatrie' || title=='Pediatrie' ||title=='pediatrie' || title=='pédiatrie' ) && calcule_age(annee)>18
+                      ?
+                        <View style={styles.ViewNumValide_off} >
+                        </View>
+                      :
+                        <View style={styles.ViewNumValide} onTouchStart={() =>next_step(annee,page)}>
+                          <Text style={styles.TextNumValide}>Valider</Text>
+                        </View>
+
+                      }
+                    </>
                     :
                       <View style={styles.ViewNumValide_off} >
                       </View>
