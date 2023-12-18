@@ -16,6 +16,8 @@ import Prestation from './Prestation';
 import Sexe from './Sexe';
 import Annee_naissance from './Annee_naissance';
 import Categorie from './Categorie';
+import ListDevices from './ListDevices';
+axios.defaults.timeout = 3000;
 
 
 
@@ -41,10 +43,14 @@ const Accueil = ({route, navigation }) => {
   const [StatutDevice,setStatutDevice]=useState('');
   const [StatutBattery,setStatutBattery]=useState('');
   const [Niveau,SetNiveau]=useState();
+  const [VendorId,SetVendorId]=useState(0);
+  const [ProductId,SetProductId]=useState(0);
+
+  /* const [VendorId,SetVendorId]=useState(1155);
+  const [ProductId,SetProductId]=useState(22339); */
+
   const [ImgBg,SetImgBg]=useState(require('./Img/background_white.png'));
 
-  const vendor_id = 1155;
-  const product_id = 22304;
 
   const [printers, setPrinters] = useState([]);
   //////
@@ -54,6 +60,7 @@ const Accueil = ({route, navigation }) => {
   )
   
   useEffect(()=>{
+    //ConnecterPrinter();
     //console.log("++++++++++"+Screen+"++++++++++"+"\n"+"id_entreprise:"+id_entreprise+"\n"+"id_beneficiaire:"+id_beneficiaire+"\n"+"id_prestation:"+id_prestation+"\n"+"id_categorie:"+id_categorie+"\n"+"prefixe_prestation:"+prefixe_prestation+"\n"+"title:"+title+"\n"+"prefixe_sexe:"+prefixe_sexe+"\n"+"lib_sexe:"+lib_sexe+"\n"+"annee:"+annee);
     
     if(Screen=='accueil'){
@@ -111,13 +118,16 @@ const Accueil = ({route, navigation }) => {
   
 
   useEffect(()=>{
-    detect_printer();
-    //console.log('STATUT DEVICE : '+StatutDevice);
-    //console.log('STATUT BATTERY : '+StatutBattery);
-    if(StatutDevice=='HorsService' && StatutBattery=='En charge'){
-      //setLe_modal('restart');
-    }
-  },[reloadNow])
+    CheckDevices();
+    
+  },[ reloadNow])
+
+  useEffect(()=>{
+    detect_printer(VendorId,ProductId);
+    ConnecterPrinter();
+    //console.log("ProductId :" + ProductId);
+    
+  },[VendorId])
 
   useEffect(() => {
     const timer_maj_1 = setInterval(() => {
@@ -160,32 +170,69 @@ const Accueil = ({route, navigation }) => {
     }, timeForInactivityInSecond * 1000)
   }
 
-  const detect_printer=()=>{
+  const detect_printer=(Vend,Prod)=>{
+   
+    USBPrinter.init().then(() => {
+      
+      let newState = printers.map((e) =>
+        {e.vendor_id===Vend && e.product_id===Prod  &&
+
+          //console.log("printer ok");
+          USBPrinter.connectPrinter(VendorId, ProductId);
+          setConnexionPrinter('oui');
+        
+          
+        }
+      );          
+
+    })
+  }
+
+  const CheckDevices=()=>{
+   
     USBPrinter.init().then(() => {
       //list printers
+      //USBPrinter.closeConn();
       USBPrinter.getDeviceList().then(setPrinters);
       
       const total_connected = printers.length;
-      //setTotal_printer(parseInt(total_connected))
-      //console.log("total_connected :" + total_connected)
-      if(total_connected!=4){
+
+      if(total_connected==1){
         setConnexionPrinter('non');
-      }
-
-      
-
-      let newState = printers.map((e) =>
-        {e.vendor_id===1155 && e.product_id===22304  &&
-
-          //console.log("printer ok");
-          USBPrinter.connectPrinter(vendor_id, product_id);
-          setConnexionPrinter('oui');
-         
-          
-        }
-      );         
+      } 
+      else{
+        setConnexionPrinter('oui');
+      }        
 
     })
+  }
+
+  const ConnecterPrinter=()=>{
+    
+      db.transaction((tx) => {
+        tx.executeSql("SELECT * FROM printer limit 1", [], function (tx, results) {
+          var tt_ligne = results.rows.length;
+          if (tt_ligne > '0') {
+            var work = results.rows.item(0);
+            var id_printer = work.id_printer;
+            var vendor_id = work.vendor_id;
+            var product_id = work.product_id;
+            //console.log(vendor_id, product_id);
+            SetProductId(parseInt(product_id));
+            SetVendorId(parseInt(vendor_id));
+
+            //setReloadNow((reloadNow) => reloadNow + 1);
+            
+          }
+          else{
+            //setConnexionPrinter('non');
+          }
+        })
+      }) 
+
+          
+     
+    
   }
 
   const Niveaubattery=()=>{
@@ -209,7 +256,7 @@ const Accueil = ({route, navigation }) => {
         if(Niveau_1!='100'){
           setStatutBattery('Debranche');
           setStatutDevice('HorsService');
-          navigation.navigate('Restart');
+          //navigation.navigate('Restart');
         }
       }
       
@@ -248,6 +295,7 @@ const Accueil = ({route, navigation }) => {
     });
 
   }
+
 
   
   const next_step = (id,page,pref,titre,cat_pref,id_prest) => {
@@ -327,7 +375,7 @@ const Accueil = ({route, navigation }) => {
 
         ///SI LA TABLE EST VIDE
         if (nb_data == '0') {
-          console.log('no data send');
+          //console.log('no data send');
         }
         else {
           var work = results.rows.item(0);
@@ -629,6 +677,7 @@ const Accueil = ({route, navigation }) => {
 
   return (
     <ImageBackground source={ImgBg}  style={styles.bg_accueil}>
+      
       <View 
         style={styles.contain}
         {...panResponder.panHandlers}
@@ -670,22 +719,7 @@ const Accueil = ({route, navigation }) => {
             />
           }
           {Screen=='accueil'&&
-            <View style={connexion == 'non' || connexion_printer == 'non'  ? styles.notif_error : styles.notif_clean}>
-            {
-              connexion == 'non' 
-              ? 
-                  <Text style={styles.notif_text}>Aucune connexion au serveur </Text>
-              : 
-                <View></View>
-            }
-            {
-              connexion_printer == 'non' 
-              ? 
-                  <Text style={styles.notif_text}>Imprimante non connecté </Text>
-              :
-                <View></View>
-            }
-            </View>
+            <ListDevices printers={printers} ConnecterPrinter={ConnecterPrinter} connexion={connexion} connexion_printer={connexion_printer} VendorId={VendorId} ProductId={ProductId} />
           }
         </View>
         

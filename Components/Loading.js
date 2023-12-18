@@ -57,6 +57,8 @@ const Loading = ({navigation }) => {
 
       tx.executeSql('create table if not exists type_patient (id_type_patient integer primary key autoincrement, lib_type_patient text, icon_type_patient text, deleted text, last_modified datetime , statut_img integer)');
 
+      tx.executeSql('create table if not exists printer (id_printer integer primary key autoincrement, product_id text, vendor_id text)');
+
       ////VERIFICATION DE CONFIG EXISTANTE
       tx.executeSql('select count(*) total_config,id_infirmerie,infirmerie from module ', [], function (tx, results) {
         var work = results.rows.item(0);

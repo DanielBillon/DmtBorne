@@ -6,6 +6,8 @@ import axios from 'axios';
 
 import { View, Text, Image, Button } from 'react-native';
 import styles from './Style';
+axios.defaults.timeout = 2000;
+
 
 let db = SQLite.openDatabase("gfa.db", "1.0", "OXYGENECI", -1);
 const load = require('./Img/loading-o2ci.gif');

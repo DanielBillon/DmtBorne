@@ -38,16 +38,28 @@ const styles = StyleSheet.create({
     height:300
   },
   centeredView: {
-    flex:1,
-    alignItems: "center",
-    marginTop: 10,
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 22,
 
   },
   modalView: {
-    width: '100%',
-    height: 700,
+    margin: 20,
+    backgroundColor: 'white',
+    borderRadius: 20,
     padding: 35,
-    alignItems: "center",
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+    width:'80%',
+    height:DEVICE_HEIGHT*0.8
     
 
   },
@@ -320,6 +332,12 @@ const styles = StyleSheet.create({
 
   },
   notif_clean: {
+    flexDirection:'row',
+    justifyContent:'space-evenly',
+    width: DEVICE_WIDTH,
+    height:30,
+    opacity:0.4,
+    padding: 2,
     
   },
   notif_error: {
@@ -562,6 +580,67 @@ container: {
   elevation: 5
 },
 
+item: {
+  padding: 20,
+  marginVertical: 8,
+  marginHorizontal: 16,
+  shadowOpacity: 0.25,
+  shadowRadius: 3.84,
+  elevation: 2,
+  borderColor: '#000',
+  borderBottomColor:'#000',
+  borderLeftColor:'#000',
+  borderRightColor:'#000',
+  borderTopColor:'#000',
+  borderBottomWidth: 2,
+  borderLeftWidth: 2,
+  borderRightWidth: 2,
+  borderTopWidth: 2,
+  backgroundColor: '#fff',
+  borderBottomRightRadius: 10,
+  borderBottomLeftRadius: 10,
+  borderTopRightRadius: 10,
+  borderTopLeftRadius: 10,
+  shadowColor: "#000",
+  shadowOffset: { width: 0, height: 2, },
+  borderRightWidth: 4,
+  borderBottomWidth: 4,
+  borderLeftWidth: 4,
+},
+item_select: {
+  padding: 20,
+  marginVertical: 8,
+  marginHorizontal: 16,
+  shadowOpacity: 0.25,
+  shadowRadius: 3.84,
+  elevation: 2,
+  borderColor: '#F78F1E',
+  borderBottomColor:'#F78F1E',
+  borderLeftColor:'#F78F1E',
+  borderRightColor:'#F78F1E',
+  borderTopColor:'#F78F1E',
+  borderBottomWidth: 2,
+  borderLeftWidth: 2,
+  borderRightWidth: 2,
+  borderTopWidth: 2,
+  backgroundColor: '#F78F1E',
+  borderBottomRightRadius: 10,
+  borderBottomLeftRadius: 10,
+  borderTopRightRadius: 10,
+  borderTopLeftRadius: 10,
+  shadowColor: "#000",
+  shadowOffset: { width: 0, height: 2, },
+  borderRightWidth: 4,
+  borderBottomWidth: 4,
+  borderLeftWidth: 4,
+},
+title: {
+  fontSize: 32,
+},
+title_select: {
+  fontSize: 32,
+  color:'#ffff',
+},
 
 });
 export default styles;
